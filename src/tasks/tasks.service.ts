@@ -34,7 +34,7 @@ export class TasksService {
     const task = this.tasks.find((task) => task.id === id);
 
     if (!task) {
-      throw new NotFoundException();
+      throw new NotFoundException(`Task With ID ${id} not exist`);
     }
 
     return task;
@@ -53,7 +53,8 @@ export class TasksService {
   }
 
   deleteTaskById(id: string) {
-    this.tasks.splice(this.tasks.indexOf(this.getTaskById(id)), 1);
+    const task = this.getTaskById(id);
+    this.tasks.splice(this.tasks.indexOf(task), 1);
   }
 
   patchTaskByStatus(id: string, status: ETaskStatus): ITask {
