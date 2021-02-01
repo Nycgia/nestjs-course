@@ -46,13 +46,18 @@ export class TasksService {
   //   return tasks;
   // }
 
-  // deleteTaskById(id: string) {
-  //   const task = this.getTaskById(id);
-  //   this.tasks.splice(this.tasks.indexOf(task), 1);
-  // }
-  // patchTaskByStatus(id: string, status: ETaskStatus): ITask {
-  //   const task = this.getTaskById(id);
-  //   task.status = status;
-  //   return task;
-  // }
+  async deleteTaskById(id: number): Promise<void> {
+    const result = await this.taskRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Task with ID ${id} Not Found`);
+    }
+  }
+
+  async patchTaskByStatus(id: number, status: ETaskStatus): Promise<Task> {
+    const task = await this.getTaskById(id);
+    task.status = status;
+    await task.save();
+    return task;
+  }
 }
