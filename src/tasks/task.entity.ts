@@ -3,6 +3,17 @@ import { ETaskStatus } from './task-status.enum';
 
 @Entity()
 export class Task extends BaseEntity {
+  constructor(
+    title = '',
+    description = '',
+    status: ETaskStatus = ETaskStatus.OPEN,
+  ) {
+    super();
+    this.title = title;
+    this.description = description;
+    this.status = status;
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
