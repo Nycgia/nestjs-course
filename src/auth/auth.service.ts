@@ -37,6 +37,8 @@ export class AuthService {
 
     if (user.password !== changePassDto.lastPassword) {
       throw new BadRequestException('The last password is wrong');
+    } else if (user.password === changePassDto.newPassword) {
+      throw new BadRequestException('The new password is the same');
     }
 
     user.password = changePassDto.newPassword;
