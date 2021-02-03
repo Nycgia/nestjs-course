@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
@@ -44,5 +45,15 @@ export class AuthService {
     user.password = changePassDto.newPassword;
 
     await user.save();
+  }
+
+  async signIn(authCredentialsDto: AuthCredentialsDto) {
+    const username = await this.userRepository.validateUserPassword(
+      authCredentialsDto,
+    );
+
+    if (!username) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
   }
 }
