@@ -5,6 +5,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { AuthService } from './auth.service';
@@ -22,7 +23,7 @@ export class AuthController {
   @Patch('/user/:id/changepassword')
   changePassword(
     @Param('id', ParseIntPipe) id: number,
-    @Body() changePassDto: ChangePassDto,
+    @Body(ValidationPipe) changePassDto: ChangePassDto,
   ) {
     return this.authService.changePassword(id, changePassDto);
   }
