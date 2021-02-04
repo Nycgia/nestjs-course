@@ -10,6 +10,7 @@ import {
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { AuthService } from './auth.service';
 import { ChangePassDto } from './dto/change-pass.dto';
+import { IAccessToken } from './IAccessToken';
 
 @Controller('auth')
 export class AuthController {
@@ -21,7 +22,9 @@ export class AuthController {
   }
 
   @Post('/signin')
-  signIn(@Body() authCredentialsDto: AuthCredentialsDto): Promise<void> {
+  signIn(
+    @Body() authCredentialsDto: AuthCredentialsDto,
+  ): Promise<IAccessToken> {
     return this.authService.signIn(authCredentialsDto);
   }
 

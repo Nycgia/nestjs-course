@@ -9,11 +9,15 @@ import { UserRepository } from './user.repository';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { ChangePassDto } from './dto/change-pass.dto';
 import { User } from './user.entity';
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from './jwt-payload.interface';
+import { IAccessToken } from './IAccessToken';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UserRepository) private userRepository: UserRepository,
+    private jwtService: JwtService,
   ) {}
 
   async getUser(userId: number): Promise<User> {
@@ -47,7 +51,7 @@ export class AuthService {
     await user.save();
   }
 
-  async signIn(authCredentialsDto: AuthCredentialsDto) {
+  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<IAccessToken> {
     const username = await this.userRepository.validateUserPassword(
       authCredentialsDto,
     );
@@ -55,5 +59,10 @@ export class AuthService {
     if (!username) {
       throw new UnauthorizedException('Invalid credentials');
     }
+
+    const payload: JwtPayload = { username };
+    const accessToken = await this.jwtService.signAsync(payload);
+
+    return { accessToken };
   }
 }
